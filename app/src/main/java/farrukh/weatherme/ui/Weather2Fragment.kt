@@ -12,7 +12,9 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import farrukh.weatherme.adapter.DayAdapter
 import farrukh.weatherme.adapter.HourAdapter
+import farrukh.weatherme.data_class.Day
 import farrukh.weatherme.data_class.Hour
 import farrukh.weatherme.databinding.FragmentWeather2Binding
 import org.json.JSONObject
@@ -37,6 +39,7 @@ class Weather2Fragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     lateinit var hours: MutableList<Hour>
+    lateinit var days: MutableList<Day>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -51,13 +54,24 @@ class Weather2Fragment : Fragment() {
     ): View? {
        val binding = FragmentWeather2Binding.inflate(inflater,container,false)
 
-        val url = "http://api.weatherapi.com/v1/forecast.json?key=9bcfb053b7d247fda8c53154230810&q=Tashkent&days=5&aqi=yes&alerts=yes"
+        val url = "http://api.weatherapi.com/v1/forecast.json?key=9bcfb053b7d247fda8c53154230810&q="+"Tashkent"+"&days=5&aqi=yes&alerts=yes"
 
         val requestque = Volley.newRequestQueue(requireContext())
         hours = mutableListOf()
+        days = mutableListOf()
 
       val currentTime: String? =  LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
+
+        binding.addLocation.setOnClickListener{
+            binding.addLocation.visibility = View.GONE
+            binding.searchText.visibility = View.VISIBLE
+            binding.send.visibility = View.VISIBLE
+
+            if (binding.searchText.text.length>0 && binding.searchText.text.isNotEmpty()){
+
+            }
+        }
 
         Log.d("TAG", "onCreateView: $currentTime")
         val request = JsonObjectRequest(url,object :Response.Listener<JSONObject> {
@@ -89,7 +103,7 @@ class Weather2Fragment : Fragment() {
                 binding.date.setText("Today , "+date)
                 binding.temprature.setText(temp_c+" °C")
 
-                binding.state.load(state)
+                binding.state.load("http:"+state)
                 binding.wind.setText(wind_kph+" kph , "+wind_dir)
                 binding.humidity.setText(hum+"%")
 
@@ -105,7 +119,7 @@ class Weather2Fragment : Fragment() {
                     val sunset = astro.getString("sunset")
 
                     val uv = current?.getString("uv")
-                    val max_wind = day.getString("maxwind_kph")
+//                    val max_wind = day.getString("maxwind_kph")
                     val pressure = current?.getString("pressure_mb")
                     val vision = current?.getString("vis_km")
                     val chance_of_rain = day.getString("daily_chance_of_rain")
@@ -124,6 +138,32 @@ class Weather2Fragment : Fragment() {
                     binding.chanceOfRain.text = binding.chanceOfRain.text.toString()+chance_of_rain+" %"
                     binding.pressure.text = binding.pressure.text.toString()+pressure+" mba"
                     binding.uv.text = binding.uv.text.toString()+uv
+
+
+                for (i in 0 until forecastday.length()){
+                    val resobj = forecastday!!.getJSONObject(i)
+                    val day = resobj!!.getJSONObject("day")
+                    val text = resobj.getString("date")
+                    val condition = day.getJSONObject("condition")
+
+                    val state = condition.getString("text")
+                    val img = condition.getString("icon")
+
+                    val max_temp = day.getString("maxtemp_c")
+                    val min_temp = day.getString("mintemp_c")
+                    val date = text.substring(text.length-5,text.length)
+
+                    val day_object = Day(date,state,max_temp,min_temp,img)
+                    days.add(day_object)
+                    var manager =
+                        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+                    binding.dayRec.layoutManager = manager
+                    binding.dayRec.adapter = DayAdapter(days)
+
+
+
+                }
 
                     val hour = resobj.getJSONArray("hour")
                     if (date_day == currentTime){
