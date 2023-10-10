@@ -19,7 +19,7 @@
         android:drawablePadding="15dp"
         android:textColor="@color/black"
         android:visibility="gone"
-        tools:visibility="gone"
+
         android:fontFamily="@font/actor"
         android:ems="10"
         android:inputType="text"
@@ -41,15 +41,16 @@
         android:src="@drawable/search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <ImageButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:visibility="gone"
         android:id="@+id/send"
+        tools:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/send"
 
         android:layout_marginStart="-32dp"
-        android:backgroundTint="#00FFFFFF"
+        android:backgroundTint="#00BCD4"
         app:layout_constraintStart_toEndOf="@+id/search_text"
         app:layout_constraintTop_toTopOf="@+id/search_text" />
 
@@ -165,7 +166,7 @@
                         android:id="@+id/wind"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="-25dp"
+                        android:layout_marginStart="-50dp"
                         android:fontFamily="@font/actor"
                         android:text="TextView"
                         android:textColor="@color/white"
