@@ -14,12 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:textSize="18dp"
-
         android:drawableStart="@drawable/search"
         android:drawablePadding="15dp"
         android:textColor="@color/black"
         android:visibility="gone"
-
         android:fontFamily="@font/actor"
         android:ems="10"
         android:inputType="text"
@@ -476,10 +474,6 @@
                         android:textSize="15dp" />
                 </LinearLayout>
             </androidx.appcompat.widget.LinearLayoutCompat>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </ScrollView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
